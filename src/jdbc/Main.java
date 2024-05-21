@@ -3,6 +3,7 @@ package jdbc;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
@@ -22,9 +23,14 @@ public class Main {
 		Scanner sc = new Scanner(System.in);
 		System.out.println("== 프로그램 시작 ==");
 		while (true) {
+			
+		    Connection connection = null;
+		    PreparedStatement pstmt = null;
+		    ResultSet resultSet = null;
+			
 			System.out.println("사용 가능한 명령어 : write, list, exit");
 			System.out.print("명령어) ");
-			String cmd = sc.nextLine();
+			String cmd = sc.nextLine().trim();
 			switch (cmd) {
 			case "write":
 				System.out.print("제목 : ");
@@ -35,10 +41,7 @@ public class Main {
 				articles.add(article);
 				System.out.println(article.getNum() + "번 게시글이 작성되었습니다.");
 				lastnum++;
-
-				Connection connection = null;
-				PreparedStatement pstmt = null;
-
+				
 				try {
 					connection = DriverManager.getConnection(URL, USER, PASSWORD);
 
@@ -70,16 +73,41 @@ public class Main {
 					}
 				}
 				break;
+
 			case "list":
-				if (articles.isEmpty()) {
-					System.out.println("게시글이 없습니다.");
-				} else {
-					System.out.println("  번호 | 제목");
-					for (Article ar : articles) {
-						System.out.printf("%5d | %-10s\n", ar.getNum(), ar.getTitle());
-					}
-				}
-				break;
+			    try {
+			        connection = DriverManager.getConnection(URL, USER, PASSWORD);
+			        String sql = "SELECT * FROM article";
+			        pstmt = connection.prepareStatement(sql);
+			        resultSet = pstmt.executeQuery();
+
+			        if (!resultSet.isBeforeFirst()) {
+			            System.out.println("게시글이 없습니다.");
+			        } else {
+			            System.out.println("  번호 | 제목");
+			            while (resultSet.next()) {
+			                int num = resultSet.getInt("num");
+			                String regdate = resultSet.getString("regDate");
+			                String updateDate = resultSet.getString("updateDate");
+			                String resulttitle = resultSet.getString("title");
+			                String resultbody = resultSet.getString("body");
+			                System.out.println("Num: " + num + "\nDate: " + regdate + "(" + updateDate + ")\nTitle: "
+			                        + resulttitle + "\nBody: " + resultbody+ "\n");
+			            }
+			        }
+			    } catch (SQLException e) {
+			        e.printStackTrace();
+			    } finally {
+			        try {
+			            if (resultSet != null) resultSet.close();
+			            if (pstmt != null) pstmt.close();
+			            if (connection != null) connection.close();
+			        } catch (SQLException e) {
+			            e.printStackTrace();
+			        }
+			    }
+			    break;
+
 			case "exit":
 				System.out.println("프로그램을 종료합니다.");
 				sc.close();
