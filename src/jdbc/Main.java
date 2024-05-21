@@ -1,5 +1,9 @@
 package jdbc;
 
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.PreparedStatement;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
@@ -7,6 +11,11 @@ import java.util.Scanner;
 import jdbc.dto.Article;
 
 public class Main {
+
+	private static final String URL = "jdbc:mysql://localhost:3306/jdbc_article_manager?useUnicode=true&characterEncoding=utf8&autoReconnect=true&serverTimezone=Asia/Seoul&useOldAliasMetadataBehavior=true&zeroDateTimeNehavior=convertToNull";
+	private static final String USER = "root";
+	private static final String PASSWORD = "";
+
 	public static void main(String[] args) {
 		int lastnum = 1;
 		List<Article> articles = new ArrayList<>();
@@ -23,8 +32,43 @@ public class Main {
 				System.out.print("내용 : ");
 				String body = sc.nextLine();
 				Article article = new Article(lastnum, title, body);
+				articles.add(article);
 				System.out.println(article.getNum() + "번 게시글이 작성되었습니다.");
 				lastnum++;
+
+				Connection connection = null;
+				PreparedStatement pstmt = null;
+
+				try {
+					connection = DriverManager.getConnection(URL, USER, PASSWORD);
+
+					String sql = "INSERT INTO article";
+					sql += " SET regDate = NOW()";
+					sql += ", updateDate = NOW()";
+					sql += ", title = '" + title + "'";
+					sql += ", `body` = '" + body + "';";
+
+					pstmt = connection.prepareStatement(sql);
+					pstmt.executeUpdate();
+
+				} catch (SQLException e) {
+					e.printStackTrace();
+				} finally {
+					if (pstmt != null) {
+						try {
+							pstmt.close();
+						} catch (SQLException e) {
+							e.printStackTrace();
+						}
+					}
+					if (connection != null) {
+						try {
+							connection.close();
+						} catch (SQLException e) {
+							e.printStackTrace();
+						}
+					}
+				}
 				break;
 			case "list":
 				if (articles.isEmpty()) {
@@ -48,4 +92,3 @@ public class Main {
 		}
 	}
 }
-
