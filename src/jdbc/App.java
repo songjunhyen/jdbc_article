@@ -17,9 +17,9 @@ public class App {
 	private static final String PASSWORD = "";
 	int lastnum = 1;
 	Scanner sc = new Scanner(System.in);
+	List<Article> articles = new ArrayList<>();
 
 	public void run() {
-		List<Article> articles = new ArrayList<>();
 		System.out.println("== 프로그램 시작 ==");
 		while (true) {
 			Connection connection = null;
@@ -37,9 +37,6 @@ public class App {
 					String title = sc.nextLine();
 					System.out.print("내용 : ");
 					String body = sc.nextLine();
-					Article article = new Article(lastnum, title, body);
-					articles.add(article);
-					lastnum++;
 
 					String sql = "INSERT INTO article";
 					sql += " SET regDate = NOW()";
@@ -135,15 +132,13 @@ public class App {
 			} catch (SQLException e) {
 				e.printStackTrace();
 			} finally {
-				if (pstmt != null) {
-					try {
-						if (resultSet != null)
-							resultSet.close();
-						if (pstmt != null)
-							pstmt.close();
-					} catch (SQLException e) {
-						e.printStackTrace();
-					}
+				try {
+					if (resultSet != null)
+						resultSet.close();
+					if (pstmt != null)
+						pstmt.close();
+				} catch (SQLException e) {
+					e.printStackTrace();
 				}
 				if (connection != null) {
 					try {
