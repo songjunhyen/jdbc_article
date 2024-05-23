@@ -54,7 +54,6 @@ public class DBUtil {
 						row.put(columnName, value);
 					}
 				}
-
 				rows.add(row);
 			}
 		} catch (SQLException e) {
@@ -67,7 +66,6 @@ public class DBUtil {
 					throw new SQLErrorException("SQL 예외, rs 닫기, SQL : " + sql, e);
 				}
 			}
-
 			if (stmt != null) {
 				try {
 					stmt.close();
@@ -76,7 +74,6 @@ public class DBUtil {
 				}
 			}
 		}
-
 		return rows;
 	}
 
@@ -86,7 +83,6 @@ public class DBUtil {
 		for (String key : row.keySet()) {
 			return (int) row.get(key);
 		}
-
 		return -1;
 	}
 
@@ -96,7 +92,6 @@ public class DBUtil {
 		for (String key : row.keySet()) {
 			return (String) row.get(key);
 		}
-
 		return "";
 	}
 
@@ -106,7 +101,6 @@ public class DBUtil {
 		for (String key : row.keySet()) {
 			return ((int) row.get(key)) == 1;
 		}
-
 		return false;
 	}
 
@@ -143,9 +137,7 @@ public class DBUtil {
 					throw new SQLErrorException("SQL 예외, stmt 닫기, SQL : " + sql, e);
 				}
 			}
-
 		}
-
 		return id;
 	}
 
