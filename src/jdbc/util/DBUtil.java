@@ -27,7 +27,7 @@ public class DBUtil {
 	public static List<Map<String, Object>> selectRows(Connection dbConn, SecSql sql) throws SQLErrorException {
 		List<Map<String, Object>> rows = new ArrayList<>();
 
-		PreparedStatement stmt = null;
+		PreparedStatement stmt = null;	
 		ResultSet rs = null;
 
 		try {
