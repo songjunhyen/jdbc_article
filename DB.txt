@@ -8,13 +8,14 @@ CREATE TABLE article(
     , updateDate DATETIME NOT NULL
     , title VARCHAR(20) NOT NULL
     , `body` TEXT NOT NULL
+    , writer VARCHAR(20) NOT NULL
 );
 
 CREATE TABLE `user`(
     num INT UNSIGNED NOT NULL PRIMARY KEY AUTO_INCREMENT
     , regDate DATETIME NOT NULL
     , updateDate DATETIME NOT NULL
-    , id VARCHAR(20) NOT NULL
+    , id VARCHAR(20) NOT NULL UNIQUE
     , pw VARCHAR(20) NOT NULL
     , nickname VARCHAR(20) NOT NULL
     , logined BOOLEAN NOT NULL
@@ -24,7 +25,8 @@ INSERT INTO article
     SET regDate = NOW()
         , updateDate = NOW()
         , title = CONCAT('제목_', RAND())
-        , `body` = CONCAT('내용_', RAND());
+        , `body` = CONCAT('내용_', RAND())
+        , writer = '테스터';
 
 INSERT INTO `user`
     SET regDate = NOW()
