@@ -16,7 +16,7 @@ CREATE TABLE `user`(
     , regDate DATETIME NOT NULL
     , updateDate DATETIME NOT NULL
     , id VARCHAR(20) NOT NULL UNIQUE
-    , pw VARCHAR(20) NOT NULL
+    , pw VARCHAR(255) NOT NULL
     , nickname VARCHAR(20) NOT NULL
     , logined BOOLEAN NOT NULL
 );
@@ -31,10 +31,15 @@ INSERT INTO article
 INSERT INTO `user`
     SET regDate = NOW()
         , updateDate= NOW()
-        , id = '테스터'
+        , id = CONCAT('테스터', RAND())
         , pw = '패스워드'
         , nickname = '테스터'
         , logined = FALSE;
+     
+ALTER TABLE article ADD INDEX idx_num (num);
+ALTER TABLE USER ADD INDEX idx_id (id);
+ALTER TABLE article ADD INDEX idx_writer (writer);
+ALTER TABLE article ADD INDEX idx_num_writer (num, writer);
      
 SELECT * FROM article;
 SELECT * FROM `user`;

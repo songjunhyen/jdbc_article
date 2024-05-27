@@ -8,18 +8,17 @@ import jdbc.dto.User;
 import jdbc.util.SecSql;
 
 public abstract class Controller {
-	public Scanner sc;
-	public String cmd;
-	public static User loggedInUser;
-	Connection connection = null;
+	protected Scanner sc;
+	protected String cmd;
+	protected static User loggedInUser;
+	protected Connection connection = null;
+	protected SecSql sql;
 
-	SecSql sql;
-	
-	String name = null;
-	String id = null;
-	String pw = null;
-	String num = null;
-	boolean exists = false;
+	protected String name = null;
+	protected String id = null;
+	protected String pw = null;
+	protected String num = null;
+	protected boolean exists = false;
 
 	public abstract void doing(String cmd);
 
@@ -28,11 +27,11 @@ public abstract class Controller {
 	}
 
 	protected String getUserByLoginId(String loginId, List<User> loggedInUsers) {
-	    for (User user : loggedInUsers) {
-	        if (user.getId().equals(loginId)) {
-	            return user.getId();
-	        }
-	    }
-	    return null;
+		for (User user : loggedInUsers) {
+			if (user.getId().equals(loginId)) {
+				return user.getId();
+			}
+		}
+		return null;
 	}
 }

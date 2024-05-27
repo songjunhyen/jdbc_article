@@ -18,6 +18,10 @@ public class UserService {
 	public boolean login(String id, String pw) {
 		return userDao.login(id, pw);
 	}
+	
+	public boolean logined(String id) {
+		return userDao.logined(id);
+	}
 
 	public boolean checkid(String id) {
 		return userDao.checkid(id);
@@ -25,5 +29,13 @@ public class UserService {
 
 	public void logout(String id) {
 		userDao.logout(id);
+	}
+
+	public void deleteuser(String writer, String pw) {
+		userDao.deleteuser(writer, pw);
+	}
+
+	public void edituser(String writer, String newname, String pw, String newpw) {
+		userDao.edituser(writer, newname, pw, newpw);
 	}
 }

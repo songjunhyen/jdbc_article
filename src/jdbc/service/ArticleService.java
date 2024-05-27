@@ -21,8 +21,8 @@ public class ArticleService {
 		return articleDao.list();
 	}
 
-	public boolean checkid(String num, String writer) {
-		return articleDao.checkid(num, writer);
+	public boolean checkidnum(String num, String writer) {
+		return articleDao.checkArticle(num, writer);
 	}
 
 	public void modify(String title, String body, String num) {
@@ -30,15 +30,14 @@ public class ArticleService {
 	}
 
 	public Map<String, Object> detail(String num) {
-		if (!articleDao.checknum(num)) {
-			System.out.println("해당 글이 존재하지 않습니다.");
+		if (!articleDao.checkArticle(num)) {
 			return null;
 		}
 		return articleDao.detail(num);
 	}
 
-	public void delete(String num) {
-		articleDao.delete(num);
+	public void delete(String num,String writer) {
+		articleDao.delete(num,writer);
 	}
 
 }
