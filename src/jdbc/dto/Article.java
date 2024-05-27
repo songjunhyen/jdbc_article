@@ -10,6 +10,7 @@ public class Article {
 	public String title;
 	public String body;
 	public String writer;
+	public int viewcount;
 	
 	public Article(Map<String, Object> articleMap) {
 		this.num = (int) articleMap.get("num");
@@ -18,5 +19,6 @@ public class Article {
 		this.title = (String) articleMap.get("title");
 		this.body = (String) articleMap.get("body");
 		this.writer = (String) articleMap.get("writer");
+		this.viewcount = (int) articleMap.get("viewcount");
 	}
 }

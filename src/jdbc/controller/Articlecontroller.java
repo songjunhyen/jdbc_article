@@ -103,9 +103,9 @@ public class Articlecontroller extends Controller {
 			System.out.println("게시물이 존재하지 않습니다");
 		} else {
 			System.out.println("== 게시물 목록 ==");
-			System.out.println("번호   |     제목      |       작성일       ");
+			System.out.println("번호   |     제목      |       작성일      | 조회수");
 			for (Article article : Container.articles) {
-				System.out.printf("%-6d | %-15s | %20s\n", article.num, article.title, Util.datetimeFormat(article.regDate));
+				System.out.printf("%-6d | %-15s | %20s\n", article.num, article.title, Util.datetimeFormat(article.regDate), article.viewcount);
 			}
 			Container.articles.clear();
 		}
@@ -137,8 +137,8 @@ public class Articlecontroller extends Controller {
 		if (articleMap != null) {
 			Article article = new Article(articleMap);
 			System.out.println("== 게시물 상세 정보 ==");
-			System.out.printf("번호 : %-6d \n제목 : %-15s \n작성자 : %-15s \n내용 : %s \n작성일 : %20s\n", article.num,
-					article.title, article.writer, article.body, Util.datetimeFormat(article.regDate));
+			System.out.printf("번호 : %-6d \n제목 : %-15s \n작성자 : %-15s \n조회수 : %-10d\n내용 : %s \n작성일 : %20s\n", article.num,
+					article.title, article.writer, article.viewcount, article.body, Util.datetimeFormat(article.regDate));
 		} else {
 			System.out.println("해당 글이 존재하지 않습니다.");
 		}

@@ -52,6 +52,7 @@ public class ArticleDao {
 	}
 
 	public Map<String, Object> detail(String num) {
+		increaseViewCount(num);
 	    SecSql sql = new SecSql();
 	    sql.append("SELECT * FROM article WHERE num = ?");
 	    sql.append(" AND EXISTS(SELECT 1 FROM article WHERE num = ?)");
@@ -76,5 +77,11 @@ public class ArticleDao {
 	        sql = SecSql.from("SELECT 1 FROM article WHERE").append("num = ? AND writer = ?", num, writer[0]);
 	    }
 	    return DBUtil.selectRowIntValue(connection, sql) == 1;
+	}
+	
+	public void increaseViewCount(String num) {
+	    SecSql sql = new SecSql();
+	    sql.append("UPDATE article SET viewcount = viewcount + 1 WHERE num = ?", num);
+	    DBUtil.update(connection, sql);
 	}
 }
