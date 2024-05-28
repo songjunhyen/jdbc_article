@@ -51,37 +51,57 @@ public class ArticleDao {
 		}
 	}
 
+	public List<Map<String, Object>> search(String keyword) {
+		sql = new SecSql();
+		sql.append("SELECT * FROM article");
+		// 키워드를 공백으로 분할
+		String[] keywords = keyword.split("\\s+");
+		if (keywords.length > 0) {
+			sql.append("WHERE");
+			// 각 키워드에 대해 LIKE 조건 추가
+			for (int i = 0; i < keywords.length; i++) {
+				if (i > 0) {
+					sql.append("AND");
+				}
+				String searchKeyword = "%" + keywords[i] + "%";
+				sql.append("(title LIKE ? OR `body` LIKE ?)", searchKeyword, searchKeyword);
+			}
+		}
+		sql.append("ORDER BY num DESC");
+		return DBUtil.selectRows(connection, sql);
+	}
+
 	public Map<String, Object> detail(String num) {
 		increaseViewCount(num);
-	    SecSql sql = new SecSql();
-	    sql.append("SELECT * FROM article WHERE num = ?");
-	    sql.append(" AND EXISTS(SELECT 1 FROM article WHERE num = ?)");
-	    return DBUtil.selectRow(connection, sql);
+		SecSql sql = new SecSql();
+		sql.append("SELECT * FROM article WHERE num = ?", num);
+		sql.append(" AND EXISTS(SELECT 1 FROM article WHERE num = ?)", num);
+		return DBUtil.selectRow(connection, sql);
 	}
 
 	public void delete(String num, String writer) {
-	    if (checkArticle(num, writer)) {
-	        SecSql sql = new SecSql();
-	        sql.append("DELETE FROM article WHERE num = ?");
-	        sql.append(" AND writer = ?");
-	        sql.append(" AND EXISTS(SELECT 1 FROM article WHERE num = ?)");
-	        sql.append(" ?", num, writer);
-	        DBUtil.delete(connection, sql);
-	    }
+		if (checkArticle(num, writer)) {
+			SecSql sql = new SecSql();
+			sql.append("DELETE FROM article WHERE num = ?", num);
+			sql.append(" AND writer = ?", writer);
+			sql.append(" AND EXISTS(SELECT 1 FROM article WHERE num = ?)", num);
+			DBUtil.delete(connection, sql);
+		}
 	}
 
 	public boolean checkArticle(String num, String... writer) {
-	    if (writer.length == 0) {
-	        sql = SecSql.from("SELECT 1 FROM article WHERE").append("num = ?", num);
-	    } else {
-	        sql = SecSql.from("SELECT 1 FROM article WHERE").append("num = ? AND writer = ?", num, writer[0]);
-	    }
-	    return DBUtil.selectRowIntValue(connection, sql) == 1;
+		if (writer.length == 0) {
+			sql = SecSql.from("SELECT 1 FROM article WHERE").append("num = ?", num);
+		} else {
+			sql = SecSql.from("SELECT 1 FROM article WHERE").append("num = ? AND writer = ?", num, writer[0]);
+		}
+		return DBUtil.selectRowIntValue(connection, sql) == 1;
 	}
-	
+
 	public void increaseViewCount(String num) {
-	    SecSql sql = new SecSql();
-	    sql.append("UPDATE article SET viewcount = viewcount + 1 WHERE num = ?", num);
-	    DBUtil.update(connection, sql);
+		SecSql sql = new SecSql();
+		sql.append("UPDATE article SET viewcount = viewcount + 1 WHERE num = ?", num);
+		DBUtil.update(connection, sql);
 	}
+
 }

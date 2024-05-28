@@ -27,8 +27,8 @@ public class Usermanager extends Controller {
 			break;
 		case "exit":
 			System.out.println("프로그램을 종료합니다.");
-			sc.close(); 
-            System.exit(0); 
+			sc.close();
+			System.exit(0);
 			return;
 		default:
 			System.out.println("알 수 없는 명령어입니다.");
@@ -49,7 +49,7 @@ public class Usermanager extends Controller {
 			System.out.println("로그인 되었습니다.");
 			while (user.getLogined() && loggedInUser == user) {
 				System.out.println(
-						"\n사용 가능한 명령어 : \nwrite, list, modify, detail, delete,\n logout, withdraw, edit, exit");
+						"\n사용 가능한 명령어 : \nwrite, list, modify, detail, search, delete,\n logout, withdraw, edit");
 				System.out.print("명령어) ");
 				Articlecontroller articlecontroller = new Articlecontroller(sc, connection, user);
 				cmd = sc.nextLine().trim();

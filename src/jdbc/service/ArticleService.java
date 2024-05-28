@@ -36,8 +36,12 @@ public class ArticleService {
 		return articleDao.detail(num);
 	}
 
-	public void delete(String num,String writer) {
-		articleDao.delete(num,writer);
+	public void delete(String num, String writer) {
+		articleDao.delete(num, writer);
+	}
+
+	public List<Map<String, Object>> search(String keyword) {
+		return articleDao.search(keyword);
 	}
 
 }

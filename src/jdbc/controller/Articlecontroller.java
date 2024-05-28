@@ -56,6 +56,9 @@ public class Articlecontroller extends Controller {
 		case "detail":
 			detail();
 			break;
+		case "search":
+			search();
+			break;
 		case "delete":
 			delete(writer);
 			break;
@@ -63,7 +66,6 @@ public class Articlecontroller extends Controller {
 			System.out.println("프로그램을 종료합니다.");
 			userService.logout(writer);
 			loggedInUser = null;
-			sc.close();
 			return;
 		default:
 			System.out.println("알 수 없는 명령어입니다.");
@@ -105,7 +107,8 @@ public class Articlecontroller extends Controller {
 			System.out.println("== 게시물 목록 ==");
 			System.out.println("번호   |     제목      |       작성일      | 조회수");
 			for (Article article : Container.articles) {
-				System.out.printf("%-6d | %-15s | %20s\n", article.num, article.title, Util.datetimeFormat(article.regDate), article.viewcount);
+				System.out.printf("%-6d | %-15s | %20s | %10d\n", article.num, article.title,
+						Util.datetimeFormat(article.regDate), article.viewcount);
 			}
 			Container.articles.clear();
 		}
@@ -138,9 +141,30 @@ public class Articlecontroller extends Controller {
 			Article article = new Article(articleMap);
 			System.out.println("== 게시물 상세 정보 ==");
 			System.out.printf("번호 : %-6d \n제목 : %-15s \n작성자 : %-15s \n조회수 : %-10d\n내용 : %s \n작성일 : %20s\n", article.num,
-					article.title, article.writer, article.viewcount, article.body, Util.datetimeFormat(article.regDate));
+					article.title, article.writer, article.viewcount, article.body,
+					Util.datetimeFormat(article.regDate));
 		} else {
 			System.out.println("해당 글이 존재하지 않습니다.");
+		}
+	}
+
+	private void search() {
+		System.out.print("검색할 키워드를 입력해주세요 : ");
+		String keyword = sc.nextLine().trim();
+		List<Map<String, Object>> articleListMap = articleService.search(keyword);
+		for (Map<String, Object> articleMap : articleListMap) {
+			Container.articles.add(new Article(articleMap));
+		}
+		if (Container.articles.size() == 0) {
+			System.out.println("검색결과가 존재하지 않습니다");
+		} else {
+			System.out.println("== 게시물 목록 ==");
+			System.out.println("번호   |     제목      |       작성일      | 조회수");
+			for (Article article : Container.articles) {
+				System.out.printf("%-6d | %-15s | %20s\n", article.num, article.title,
+						Util.datetimeFormat(article.regDate), article.viewcount);
+			}
+			Container.articles.clear();
 		}
 	}
 
@@ -153,7 +177,7 @@ public class Articlecontroller extends Controller {
 				System.out.println("해당 글이 존재하지 않거나 해당 글에 대한 권한이 존재하지 않습니다.");
 				break;
 			} else {
-				articleService.delete(num,writer);
+				articleService.delete(num, writer);
 				System.out.print("삭제되었습니다.");
 			}
 			break;

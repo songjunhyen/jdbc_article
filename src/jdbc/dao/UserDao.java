@@ -48,12 +48,13 @@ public class UserDao {
 		}
 		return success;
 	}
-	public boolean logined(String id) {
-	    sql = new SecSql();
-	    boolean loginedValue = DBUtil.selectRowBooleanValue(connection,
-	            SecSql.from("SELECT logined FROM user WHERE").append("id = ?;", id));
 
-	    return loginedValue;
+	public boolean logined(String id) {
+		sql = new SecSql();
+		boolean loginedValue = DBUtil.selectRowBooleanValue(connection,
+				SecSql.from("SELECT logined FROM user WHERE").append("id = ?;", id));
+
+		return loginedValue;
 	}
 
 	public String getname(String id) {
@@ -73,27 +74,27 @@ public class UserDao {
 	}
 
 	public void deleteuser(String id, String pw) {
-	    if (checkid(id, pw)) {
-	        SecSql sql = new SecSql();
-	        sql.append("DELETE FROM `user` WHERE id = ? AND pw = ?");
-	        sql.append(" AND EXISTS(SELECT 1 FROM `user` WHERE id = ?)");
-	        sql.append(" ?", id, pw);
-	        logout(id);
-	        DBUtil.delete(connection, sql);
-	    }
+		if (checkid(id, pw)) {
+			SecSql sql = new SecSql();
+			sql.append("DELETE FROM `user` WHERE id = ? AND pw = ?");
+			sql.append(" AND EXISTS(SELECT 1 FROM `user` WHERE id = ?)");
+			sql.append(" ?", id, pw);
+			logout(id);
+			DBUtil.delete(connection, sql);
+		}
 	}
 
 	public void edituser(String id, String newname, String pw, String newpw) {
-	    if (checkid(id, pw)) {
-	        SecSql sql = new SecSql();
-	        sql.append("UPDATE `user`");
-	        sql.append("SET nickname = ?", newname);
-	        sql.append(", pw = ?", newpw);
-	        sql.append(" WHERE id = ?");
-	        sql.append(" AND EXISTS(SELECT 1 FROM `user` WHERE id = ?)");
-	        sql.append(" ?", id);
-	        DBUtil.update(connection, sql);
-	    }
+		if (checkid(id, pw)) {
+			SecSql sql = new SecSql();
+			sql.append("UPDATE `user`");
+			sql.append("SET nickname = ?", newname);
+			sql.append(", pw = ?", newpw);
+			sql.append(" WHERE id = ?");
+			sql.append(" AND EXISTS(SELECT 1 FROM `user` WHERE id = ?)");
+			sql.append(" ?", id);
+			DBUtil.update(connection, sql);
+		}
 	}
 
 	public boolean checkid(String id, String... pw) {
